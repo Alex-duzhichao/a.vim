@@ -315,9 +315,14 @@ endfunction
 function! GetNewFilename(path, baseName, extension, corrispondingExtession)
     let path = a:path . "/"
     let fileName = a:baseName
+    let l:corrispondingExtession = a:corrispondingExtession
     if (a:extension == "go")
         "golang
-        if fileName =~ ".*_test"
+        if fileName =~ '\.pb'
+            let index = match(fileName, '\.pb')
+            let fileName = fileName[:index-1]
+            let l:corrispondingExtession = 'proto'
+        elseif fileName =~ ".*_test"
             "golang test file
             let index = match(fileName, '_test')
             let fileName = fileName[:index-1]
@@ -327,7 +332,7 @@ function! GetNewFilename(path, baseName, extension, corrispondingExtession)
         endif
     endif
 
-    return path . fileName . '.' . a:corrispondingExtession
+    return path . fileName . '.' . l:corrispondingExtession
 endfunction
 
 " Function : EnumerateFilesByExtensionInPath (PRIVATE)
